@@ -22,7 +22,8 @@ Follow these steps to run the project. You must use a terminal (command line int
 
 3. **Download the VM Configuration**
     
-    Fork and clone the  [Fullstack Nanodegree VM Repo](https://github.com/udacity/fullstack-nanodegree-vm) repository. Open up your terminal and then `cd` into the directory. Inside, you will find another directory called **vagrant**. Change directory to the **vagrant** directory. 
+    Fork and clone the  [Fullstack Nanodegree VM Repo](https://github.com/udacity/fullstack-nanodegree-vm). Open up your terminal and then `cd` into the directory. Inside, you will find another directory called **vagrant**. Change directory to the **vagrant** directory. 
+    
     [*How to Fork a Repository*](https://help.github.com/articles/fork-a-repo/)
 
 4. **Start the virtual machine**
