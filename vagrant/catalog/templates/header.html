@@ -1,3 +1,8 @@
 <nav class="nav">
     <a class="nav-link" href="/home">Home</a>
+    {% if user %}
+    <a class="nav-link" href="/login">Hi Mayuran</a>
+    {% else %}
+        <a class="nav-link" href="/login">Login</a>
+    {% endif %}
 </nav>
