@@ -2,7 +2,7 @@
     <h3>Categories</h3>
     {% for category in categories %}
     <div class="row border border-primary rounded m-3 p-3">
-        <a href={{ url_for('getProductsByCategory',category=category) }}>{{category}}</a>
+        <a href={{ url_for('getProductsByCategory',category=category,user=user) }}>{{category}}</a>
     </div>
     {% endfor %}
 </div>

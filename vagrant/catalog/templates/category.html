@@ -4,7 +4,7 @@
     <div class="col">
         {% for product in products %}
         <div class="row border border-primary rounded m-3 p-3">
-            <a href={{ url_for("getProduct",product_id = product.id) }}>{{product.title}}</a>
+            <a href={{ url_for("getProduct",product_id = product.id,user=user) }}>{{product.title}}</a>
             {% if user %}
             <div class="col">
                 <a href='#'>Edit</a>

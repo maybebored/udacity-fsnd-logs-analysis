@@ -7,7 +7,7 @@
         {% if user %}
         <a href="#" class="btn btn-primary">Edit</a>
         {% endif %}
-        <a class="badge badge-primary" href={{ url_for('getProductsByCategory',category=product.category) }}>{{ product.category }}</a>
+        <a class="badge badge-primary" href={{ url_for('getProductsByCategory',category=product.category,user=user) }}>{{ product.category }}</a>
     </div>
 </div>
 {% endblock %}
