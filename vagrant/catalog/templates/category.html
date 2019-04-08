@@ -1,14 +1,18 @@
-{% extends "index.html" %} {% block content %}
+{% extends "index.html" %} 
+{% block content %}
 <div class="row">
     {% include "categories.html" %}
     <div class="col">
+        {% if user %}
+        <a href={{ url_for( 'newProduct') }}>Add New Item</a>
+        {% endif %} 
         {% for product in products %}
         <div class="row border border-primary rounded m-3 p-3">
-            <a href={{ url_for("getProduct",product_id = product.id,user=user) }}>{{product.title}}</a>
+            <a href={{ url_for( "getProduct",product_id=product.id,user=user) }}>{{product.title}}</a>
             {% if user %}
             <div class="col">
-                <a href='#'>Edit</a>
-                <a href='#'>Delete</a>
+                <a href={{ url_for("editProduct",product_id=product.id) }}>Edit</a>
+                <a href={{ url_for("deleteProduct",product_id=product.id) }}>Delete</a>
                 <!-- {{product.description}}<br>
                             {{product.category}}<br>
                             {{product.created_on}}<br> -->

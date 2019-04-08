@@ -163,7 +163,7 @@ def gdisconnect():
     	response.headers['Content-Type'] = 'application/json'
     	return response
 
-
+# Display main page
 @app.route('/')
 @app.route('/home/')  # home page
 def catalogMain():
@@ -175,23 +175,73 @@ def catalogMain():
     categories = [row.category for row in categories_query.all()]
     return render_template('home.html', products=products_query, categories=categories, user=user)
 
-
-@app.route('/catalog/<string:category>/')  # category page
+# Display category page
+@app.route('/catalog/<string:category>/')
 def getProductsByCategory(category):
+    user = getLoggedInUser()
     categories_query = session.query(
         Product.category.distinct().label("category"))
     categories = [row.category for row in categories_query.all()]
     products_query = session.query(Product).filter(
         Product.category == category)
-    return render_template('category.html', products=products_query, categories=categories)
+    return render_template('category.html', products=products_query, categories=categories, user=user)
 
-
+# Get a product by ID
 @app.route('/catalog/product/<int:product_id>/')
 def getProduct(product_id):
+    user = getLoggedInUser()
     products_query = session.query(Product).filter(
         Product.id == product_id).one()
-    return render_template('product.html', product=products_query)
+    return render_template('product.html', product=products_query, user=user)
 
+# Add new product
+@app.route('/catalog/product/new/', methods=['GET', 'POST'])
+def newProduct():
+    user = getLoggedInUser()
+    if not user:
+        return redirect('/login')
+    categories_query = session.query(
+        Product.category.distinct().label("category"))
+    categories = [row.category for row in categories_query.all()]
+    if request.method == 'POST':
+        params = request.form
+        newProduct = Product(title=params['title'],description=params['description'],category=params['category'],created_on=datetime.now())
+        session.add(newProduct)
+        session.commit()
+        return redirect(url_for('catalogMain'))
+    else:
+        return render_template('new_product.html',categories=categories, user=user)
+
+# Delete an existing product
+@app.route('/catalog/<int:product_id>/delete/', methods=['GET', 'POST'])
+def deleteProduct(product_id):
+    user = getLoggedInUser()
+    if not user:
+        return redirect('/login')
+    productToDelete = session.query(
+        Product).filter_by(id=product_id).one()
+    if request.method == 'POST':
+        session.delete(productToDelete)
+        session.commit()
+        return redirect(url_for('catalogMain'))
+    else:
+        return render_template('delete_product.html',product=productToDelete)
+
+# Edit an existing product
+@app.route('/catalog/<int:product_id>/edit/', methods=['GET', 'POST'])
+def editProduct(product_id):
+    user = getLoggedInUser()
+    if not user:
+        return redirect('/login')
+    productToEdit = session.query(
+        Product).filter_by(id=product_id).one()
+    if request.method == 'POST':
+        params = request.form
+        productToEdit.title = params['title']
+        productToEdit.description = params['description']
+        return redirect(url_for('catalogMain'))
+    else:
+        return render_template('edit_product.html',product=productToEdit)
 
 # JSON APIs for Product Catalog App
 # GET all items
@@ -201,8 +251,6 @@ def catalogJSON():
     return jsonify(catalog=[(p.title, p.description) for p in products])
 
 # GET all categories
-
-
 @app.route('/api/catalog/categories/', methods=['GET'])
 def categoriesJSON():
     products = session.query(Product.category.distinct().label('category'))
@@ -210,6 +258,6 @@ def categoriesJSON():
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
+    app.secret_key = 'secret_key_mayuran_product'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
