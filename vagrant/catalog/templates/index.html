@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	</head>
-	<body>
-		{% include 'header.html' %}
-		<div class="container">
-            {% block content %}
-                
-			{% endblock %}
-		</div>
-	</body>
+
+<head>
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	 crossorigin="anonymous">
+</head>
+
+<body>
+	{% include 'header.html' %}
+	<div class="container">
+		{% block content %} {% endblock %}
+	</div>
+	<script>
+		$('#signoutButton').click(function () {
+			auth2.disconnect();
+			$.ajax({
+				type: 'GET',
+				url: '/gdisconnect',
+				success: function (result) {
+					$('#result').html('Logging out</br>' + result + '</br>Redirecting...');
+					setTimeout(function () { window.location.href = "/home"; }, 3000);
+				}
+			});
+		});
+	</script>
+</body>
+
 </html>
