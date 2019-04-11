@@ -14,6 +14,7 @@ class Product(Base):
     description = Column(String(250), nullable=False)
     category = Column(String(250), nullable=False)
     created_on = Column(Date,nullable=False)
+    user_id = Column(String(250))
 
     @property
     def serialize(self):

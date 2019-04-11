@@ -26,6 +26,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+# Alert the received message
+def alertError(msg):
+    return ("<script>function myFunction()" + 
+    "{alert('"+msg+"');window.location.href='/'}</script>" +
+    "<body onload='myFunction()'>")
+
 # Check for logged in user; if not logged in return None
 def getLoggedInUser():
     try:
@@ -150,7 +156,7 @@ def gdisconnect():
     	del login_session['picture']
     	response = make_response(json.dumps('Successfully disconnected.'), 200)
     	response.headers['Content-Type'] = 'application/json'
-    	return response
+    	return redirect('/')
     else:
 
     	response = make_response(json.dumps(
@@ -200,7 +206,8 @@ def newProduct():
     categories = [row.category for row in categories_query.all()]
     if request.method == 'POST':
         params = request.form
-        newProduct = Product(title=params['title'],description=params['description'],category=params['category'],created_on=datetime.now())
+        newProduct = Product(title=params['title'],description=params['description'],
+            category=params['category'],created_on=datetime.now(), user_id=login_session['username'])
         session.add(newProduct)
         session.commit()
         return redirect(url_for('catalogMain'))
@@ -215,6 +222,8 @@ def deleteProduct(product_id):
         return redirect('/login')
     productToDelete = session.query(
         Product).filter_by(id=product_id).one()
+    if (productToDelete.user_id is None) or (productToDelete.user_id != login_session['username']):
+        return alertError("You are not authorised to delete this product");
     if request.method == 'POST':
         session.delete(productToDelete)
         session.commit()
@@ -230,6 +239,8 @@ def editProduct(product_id):
         return redirect('/login')
     productToEdit = session.query(
         Product).filter_by(id=product_id).one()
+    if  (productToEdit.user_id is None) or (productToEdit.user_id != login_session['username']):
+        return alertError("You are not authorised to edit this product");
     if request.method == 'POST':
         params = request.form
         productToEdit.title = params['title']
