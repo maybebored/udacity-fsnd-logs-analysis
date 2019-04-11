@@ -14,8 +14,17 @@ class Product(Base):
     description = Column(String(250), nullable=False)
     category = Column(String(250), nullable=False)
     created_on = Column(Date,nullable=False)
-    last_updated_on = Column(Date)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description':self.description,
+            'category':self.category,
+            'created_on':self.created_on
+        }    
+        
 engine = create_engine('sqlite:///itemcatalog.db')
 
 Base.metadata.create_all(engine)

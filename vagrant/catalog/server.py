@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, jsonify, render_template, request, redirect, jsonify, url_for, flash, make_response
 from flask import session as login_session
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -7,7 +7,6 @@ from datetime import datetime, date
 import random
 import string
 import json
-from flask import make_response
 import httplib2
 from oauth2client import client
 from oauth2client.client import FlowExchangeError
@@ -37,12 +36,9 @@ def getLoggedInUser():
 @app.route('/login')
 def showLogin():
     user = getLoggedInUser()
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
-    login_session['state'] = state
-    return render_template('login.html', STATE=state, user=user)
+    return render_template('login.html', user=user)
 
-# (Receive auth_code by HTTPS POST)
+# Receive auth_code by HTTPS POST
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
@@ -94,6 +90,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+    # Check if logging in user is saved in session.
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
@@ -110,7 +107,6 @@ def gconnect():
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-
     data = answer.json()
 
     login_session['username'] = data['name']
@@ -124,13 +120,12 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
 
     # DISCONNECT - Revoke a current user's token and reset their login_session
 
-
+# Revoke access when user signs out by redirecting to this route
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session['access_token']
@@ -256,6 +251,13 @@ def categoriesJSON():
     products = session.query(Product.category.distinct().label('category'))
     return jsonify(categories=[p.category for p in products])
 
+# GET product by id
+@app.route('/api/catalog/product/<int:product_id>/', methods=['GET'])
+def getProductJSON(product_id):
+    user = getLoggedInUser()
+    products_query = session.query(Product).filter(
+        Product.id == product_id).one()
+    return jsonify(product = products_query.serialize)
 
 if __name__ == '__main__':
     app.secret_key = 'secret_key_mayuran_product'
