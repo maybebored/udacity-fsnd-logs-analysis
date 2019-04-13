@@ -229,7 +229,7 @@ def deleteProduct(product_id):
         session.commit()
         return redirect(url_for('catalogMain'))
     else:
-        return render_template('delete_product.html',product=productToDelete)
+        return render_template('delete_product.html',product=productToDelete,user=user)
 
 # Edit an existing product
 @app.route('/catalog/<int:product_id>/edit/', methods=['GET', 'POST'])
@@ -247,7 +247,7 @@ def editProduct(product_id):
         productToEdit.description = params['description']
         return redirect(url_for('catalogMain'))
     else:
-        return render_template('edit_product.html',product=productToEdit)
+        return render_template('edit_product.html',product=productToEdit,user=user)
 
 # JSON APIs for Product Catalog App
 # GET all items

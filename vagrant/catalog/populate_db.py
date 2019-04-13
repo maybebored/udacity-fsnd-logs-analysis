@@ -52,7 +52,7 @@ session.add(product6)
 session.commit()
 
 product7 = Product(title='Heavy Metal Ball',description='Can\'t say more.',
-             category='Putshot',created_on=datetime.now())
+             category='Putshot',created_on=datetime(2018,1,1))
 session.add(product7)
 session.commit()
 

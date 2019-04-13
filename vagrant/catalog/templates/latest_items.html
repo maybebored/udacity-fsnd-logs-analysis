@@ -1,11 +1,20 @@
-<div class="col">
-    <h3>Latest Items</h3>
-    {% if user %}
-    <a href={{ url_for('newProduct') }}>Add New Item</a>
-    {% endif %}
+<div class="col bg-light">
+    <div class="row justify-content-start">
+        <h3 class="ml-2">Latest Items</h3>
+        {% if user %}
+        <a class="d-inline mx-3" href={{ url_for( 'newProduct') }}>
+            <span style="font-size: 1.5em;" class="text-primary">
+                <i class="fas fa-plus"></i>
+            </span>
+        </a>
+        {% endif %}
+    </div>
     {% for product in products %}
-    <div class="row border border-primary rounded m-3 p-3">
-        {{product.title}}
+    <div class="row m-1 p-1 justify-content-start">
+        <a class="text-info font-weight-bold" 
+        href={{ url_for( "getProduct",product_id=product.id,user=user) }}>
+            {{product.title}}
+        </a>
     </div>
     {% endfor %}
 </div>

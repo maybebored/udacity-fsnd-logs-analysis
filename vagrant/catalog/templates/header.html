@@ -1,9 +1,13 @@
-<nav class="nav">
-    <a class="nav-link" href="/home">Home</a>
-    {% if user %}
-        <a class="nav-link" href="#">Hi {{ user }}</a>
-        <a class="nav-link" href="/gdisconnect">Logout</a>
-    {% else %}
-        <a class="nav-link" href="/login">Login</a>
-    {% endif %}
+<nav class="navbar bg-light">
+    <div class="col">
+        <a class="nav-link nav-brand display-4" href="/home">Home</a>        
+    </div>
+    <div class="col">
+        {% if user %}
+        <p class="font-weight-bold text-right mb-1">Hi {{ user }}</p>
+        <a class="text-right nav-link text-danger p-1" href="/gdisconnect">Logout</a>
+        {% else %}
+        <a class="text-right nav-link text-primary p-1 display-4" href="/login">Login</a>
+        {% endif %}
+    </div>
 </nav>

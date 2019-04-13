@@ -1,8 +1,10 @@
-<div class="col-sm bg-light">
-    <h3>Categories</h3>
+<div class="col w-15 border-right">
+    <div class="row justify-content-start">
+        <h3 class="ml-2">Categories</h3>
+    </div>
     {% for category in categories %}
-    <div class="row border border-primary rounded m-3 p-3">
-        <a href={{ url_for('getProductsByCategory',category=category,user=user) }}>{{category}}</a>
+    <div class="row m-1 p-1 justify-content-start">
+        <a class="text-info font-weight-bold" href={{ url_for( 'getProductsByCategory',category=category,user=user) }}>{{category}}</a>
     </div>
     {% endfor %}
 </div>

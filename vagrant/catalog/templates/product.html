@@ -1,13 +1,23 @@
-{% extends "index.html" %} 
-{% block content %}
+{% extends "index.html" %} {% block content %}
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title">{{ product.title }}</h5>
-        <p class="card-text">{{ product.description }}</p>
+        <p class="card-text text-secondary">{{ product.description }}</p>
         {% if user %}
-        <a href="#" class="btn btn-primary">Edit</a>
+        <div class="row justify-content-start">
+            <a class="d-inline mx-3" href={{ url_for( "editProduct",product_id=product.id) }}>
+                <span style="font-size: 1em;" class="text-warning">
+                    <i class="fas fa-edit"></i>
+                </span>
+            </a>
+            <a class="d-inline mx-3" href={{ url_for( "deleteProduct",product_id=product.id) }}>
+                <span style="font-size: 1em;" class="text-danger">
+                    <i class="fas fa-trash"></i>
+                </span>
+            </a>
+        </div>
         {% endif %}
-        <a class="badge badge-primary" href={{ url_for('getProductsByCategory',category=product.category,user=user) }}>{{ product.category }}</a>
+        <a class="badge badge-primary" href={{ url_for( 'getProductsByCategory',category=product.category,user=user) }}>{{ product.category }}</a>
     </div>
 </div>
 {% endblock %}
